@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import alert from '../../services/alert'
-import { getBooks, getUsers } from "@/services/mongoApi";
+import { getBooks, getUsers, createUser } from "@/services/mongoApi";
 import { AES } from 'crypto-es/lib/aes'
 
 const SignUp: React.FC = () => {
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
 
   const handleSignup = () => {
-    const userData = { username, password };
-
-    const encrypted = AES.encrypt("Message", "Secret Passphrase");
-    const decrypted = AES.decrypt(encrypted, "Secret Passphrase");
+    const encryptPW = AES.encrypt(password, username);
+    // const decrypted = AES.decrypt(encrypted, "Secret Passphrase");
 
     // Retrieve current accounts
     // Check if account exists
@@ -32,18 +31,32 @@ const SignUp: React.FC = () => {
         //   }
         // })
         
-        if (users.some((user: any) => {
-          return user.studentId == username
-          // Return true if there is already a username
-        })) {
-
+        if (users.some((user: any) => { return user.studentId == username })) {
+          // Enters here if there is matching name
+          console.log("Repeated user")
+          return "1"
+        } else {
+          // Create new user
+          createUser({
+            "studentId": username,
+            "password": encryptPW.ciphertext,
+            "name": name,
+            "loan": 0,
+            "borrowedBooks": []
+            }
+          ).then(response => {
+            console.log(response)
+            return "2"
+          })
+          return "3"
         }
-
         
       });
+      return "4"
     }
 
     verifyAccount().then(status => {
+      console.log("I am in verifyacc")
       console.log(status)
     });
 
@@ -62,6 +75,13 @@ const SignUp: React.FC = () => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Register</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        placeholderTextColor="black"
+        value={name}
+        onChangeText={setName}
+      />
       <TextInput
         style={styles.input}
         placeholder="Username"

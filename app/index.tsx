@@ -10,9 +10,9 @@ export default function Index() {
   
   
   if (!isLoggedIn) {
-    console.log("I am redirecting")
+    console.log("Redirecting to Login")
     return <Redirect href={'/login'}/>
   }
-  
+  console.log("Redirecting to Home")
   return <Redirect href={'/home'}/>
 }

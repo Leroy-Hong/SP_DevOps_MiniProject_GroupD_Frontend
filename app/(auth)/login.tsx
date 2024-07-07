@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
+import { Link, router } from 'expo-router';
 import alert from '../../services/alert'
 
 const Login: React.FC = () => {
@@ -37,7 +38,12 @@ const Login: React.FC = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
+      <View style={{flexDirection: 'row'}}>
       <Button title="Log In" onPress={handleLogin} />
+      <Button title="Sign up" onPress={ () => router.navigate("/signup")} />
+      {/* <Link replace href={"/signup"}>Sign up</Link> */}
+      </View>
+      
     </View>
   );
 };

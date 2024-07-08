@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
+import { Base64 } from 'crypto-es/lib/enc-base64'
 import alert from '../../services/alert'
-import { getBooks, getUsers, createUser } from "@/services/mongoApi";
+import { getUsers, createUser } from "@/services/mongoApi";
 import { AES } from 'crypto-es/lib/aes'
 import { router } from 'expo-router';
 
@@ -10,20 +11,16 @@ const SignUp: React.FC = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
 
   const handleSignup = () => {
-    const encryptPW = AES.encrypt(password, username).toString();
-    // const decrypted = AES.decrypt(encrypted, "Secret Passphrase");
+    const username64 = Base64.parse(username);
+    const encryptPW = AES.encrypt(password, username, {iv: username64, salt: username64}).toString();
 
     // Retrieve current accounts (async) THEN
     // Check if account exists
     // If exists: return error. Else create new account & redirect to "success page"
 
-
-
-
-    async function verifyAccount() {
+    async function verifyAcc() {
       return getUsers().then(users => {
         // const status = users.forEach((value:object, index: number, array: object[]) => {
         //   if (users[index].studentId == username) {
@@ -51,7 +48,7 @@ const SignUp: React.FC = () => {
       });
     }
 
-    verifyAccount().then(result => {
+    verifyAcc().then(result => {
       if (!result) {
         console.log("User already exists")
         alert('Error','User already exists', [

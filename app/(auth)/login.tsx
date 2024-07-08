@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, router } from 'expo-router';
+import { AES } from 'crypto-es/lib/aes'
+import { Base64 } from 'crypto-es/lib/enc-base64'
 import alert from '../../services/alert'
+import { getUsers } from "@/services/mongoApi";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -10,14 +13,42 @@ const Login: React.FC = () => {
   const { login } = useAuth();
 
   const handleLogin = () => {
+    const username64 = Base64.parse(username);
+    const encryptPW = AES.encrypt(password, username, {iv: username64, salt: username64}).toString();
+
+    async function verifyAcc() {
+      return getUsers().then(users => {
+        if (users.some((user: any) => { console.log(user.studentId, user.password, encryptPW); return (user.studentId == username && user.password == encryptPW) })) {
+          // Enters here if there is matching name
+          console.log("Found user");
+          return true
+        } else {
+          return false
+        }
+      });
+    }
+
     const userData = { username };
-    if (userData.username) {
-      login(userData)}
-    else {
+
+    // Guard empty username
+    if (!userData.username) {
       alert('Error','Username cannot be empty', [
         {text: 'OK', onPress: () => console.log('Login dismissed')}
       ]);
-    } 
+
+      return
+    }
+
+    verifyAcc().then(result => {
+      if (result) {
+        login(userData)
+      } else {
+        // Error
+        alert('Error','Username & password does not match', [
+          {text: 'OK', onPress: () => console.log('Alert dismissed')}
+        ]);
+      }
+    });  
   };
 
   return (

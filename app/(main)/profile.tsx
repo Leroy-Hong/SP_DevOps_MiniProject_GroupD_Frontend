@@ -1,8 +1,9 @@
 import { Button, Pressable, Text, View } from "react-native";
 import { useAuth } from '../../contexts/AuthContext';
 
+
 export default function Profile() {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
 
 
     return (
@@ -13,6 +14,7 @@ export default function Profile() {
             alignItems: "center",
             }}
         >
+            <Text>{user?.username}</Text>
             <Button title="Log Out" onPress={logout}></Button>
         </View>
         );

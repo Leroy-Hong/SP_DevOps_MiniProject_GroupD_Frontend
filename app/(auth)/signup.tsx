@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import alert from '../../services/alert'
 import { getBooks, getUsers, createUser } from "@/services/mongoApi";
 import { AES } from 'crypto-es/lib/aes'
+import { router } from 'expo-router';
 
 const SignUp: React.FC = () => {
   const [name, setName] = useState('');
@@ -12,10 +13,10 @@ const SignUp: React.FC = () => {
   const { login } = useAuth();
 
   const handleSignup = () => {
-    const encryptPW = AES.encrypt(password, username);
+    const encryptPW = AES.encrypt(password, username).toString();
     // const decrypted = AES.decrypt(encrypted, "Secret Passphrase");
 
-    // Retrieve current accounts
+    // Retrieve current accounts (async) THEN
     // Check if account exists
     // If exists: return error. Else create new account & redirect to "success page"
 
@@ -23,7 +24,7 @@ const SignUp: React.FC = () => {
 
 
     async function verifyAccount() {
-      await getUsers().then(users => {
+      return getUsers().then(users => {
         // const status = users.forEach((value:object, index: number, array: object[]) => {
         //   if (users[index].studentId == username) {
         //     console.log("THERE IS ERROR")
@@ -33,43 +34,40 @@ const SignUp: React.FC = () => {
         
         if (users.some((user: any) => { return user.studentId == username })) {
           // Enters here if there is matching name
-          console.log("Repeated user")
-          return "1"
+          console.log("Repeated user");
+          return false
+
+
         } else {
           // Create new user
-          createUser({
+          return createUser({
             "studentId": username,
-            "password": encryptPW.ciphertext,
+            "password": encryptPW,
             "name": name,
             "loan": 0,
             "borrowedBooks": []
-            }
-          ).then(response => {
-            console.log(response)
-            return "2"
-          })
-          return "3"
+            })
         }
-        
       });
-      return "4"
     }
 
-    verifyAccount().then(status => {
-      console.log("I am in verifyacc")
-      console.log(status)
+    verifyAccount().then(result => {
+      if (!result) {
+        console.log("User already exists")
+        alert('Error','User already exists', [
+          {text: 'OK', onPress: () => console.log('Alert dismissed')}
+        ]);
+      } else {
+        console.log("User created")
+        alert('Success!','User has been created', [
+          {text: 'Go back to login', onPress: () => {
+            console.log('Alert dismissed')
+            router.navigate("/login")
+          }}
+        ]);
+      }
     });
 
-
-
-  
-    // if (userData.username) {
-    //   login(userData)}
-    // else {
-    //   alert('Error','Username cannot be empty', [
-    //     {text: 'OK', onPress: () => console.log('Login dismissed')}
-    //   ]);
-    // } 
   };
 
   return (

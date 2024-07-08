@@ -29,7 +29,7 @@ export async function getBooks() {
             })
             .catch(error => {
                 console.error(error);
-                return { "balls": "somethring wrong" };
+                return { "Error": error };
             });
     
 } 
@@ -63,7 +63,7 @@ export async function getUsers(search:object = {}) {
             })
             .catch(error => {
                 console.error(error);
-                return { "balls": "somethring wrong" };
+                return { "Error": error };
             });
     
 } 
@@ -90,16 +90,11 @@ export async function createUser(doc:object = {}) {
                 if (!response.ok) {
                     throw new Error("HTTP error! status: ${response.status}")
                 }
-                console.log(response)
                 return response.json();
-            })
-            .then(data => {
-                console.log(data)
-                return data.documents;
             })
             .catch(error => {
                 console.error(error);
-                return { "balls": "somethring wrong" };
+                return { "Error": error };
             });
     
 } 

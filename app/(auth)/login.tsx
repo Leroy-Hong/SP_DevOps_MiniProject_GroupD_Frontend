@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, Pressable } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, router } from 'expo-router';
 import { AES } from 'crypto-es/lib/aes'
@@ -52,40 +52,85 @@ const Login: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Login Screen</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor="black"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="black"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <View style={{flexDirection: 'row'}}>
-      <Button title="Log In" onPress={handleLogin} />
-      <Button title="Sign up" onPress={ () => router.navigate("/signup")} />
-      {/* <Link replace href={"/signup"}>Sign up</Link> */}
+    <View style={{ flex: 1, justifyContent: 'center'}}>
+      <Text style={styles.headerText}>Sign in</Text>
+      <View style={{padding:61}}>
+        <Text style={styles.subText}>Username</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your admin number"
+          placeholderTextColor="gray"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <Text style={styles.subText}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your password"
+          placeholderTextColor="gray"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <Pressable style={styles.signinButton} onPress={handleLogin}>
+          <Text style={styles.signinText}>Sign In</Text>
+        </Pressable>
+        <Button title="Don't have an account?" color={"#153B50"} onPress={ () => router.navigate("/signup")} />
       </View>
-      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
+    backgroundColor: "#ECEBE4",
+    borderColor: "#000000",
+    shadowColor: 'black',
+    shadowOpacity: 0.25,
+    borderRadius: 3,
+
+    shadowOffset: {
+      width: 0,
+      height: 5
+    },
+
+    height: 47,
+    marginTop:10,
+    marginBottom:19,
+    borderWidth: 0,
     padding: 10,
+    fontSize: 20
   },
+  headerText: {
+    alignSelf: 'center',
+    color: "#243234",
+    fontWeight: 'bold',
+    fontSize: 40
+  },
+  subText: {
+    fontSize: 20
+  },
+  signinButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#153B50",
+    height: 56,
+    marginTop: 32,
+    borderRadius: 12,
+    shadowColor: 'black',
+    shadowOpacity: 0.25,
+    shadowOffset: {
+      width: 0,
+      height: 5
+    },
+
+    
+  },
+  signinText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  }
 });
 
 export default Login;

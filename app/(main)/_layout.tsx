@@ -12,6 +12,15 @@ export default function MainLayout() {
           <Ionicons name="home" color={color} size={size} />
         ),
         }}/>
+
+      <Tabs.Screen name="booklist" options={{
+        headerTitle:'All Books',
+        tabBarLabel:'All Books',
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="library" color={color} size={size} />
+        ),
+        }}/>
+
       <Tabs.Screen name="profile" options={{
         headerTitle:'Profile',
         tabBarLabel:'Profile',
@@ -19,6 +28,8 @@ export default function MainLayout() {
           <Ionicons name="person" color={color} size={size} />
         ),
         }}/>
+
+      
         
     </Tabs>
   );

@@ -68,7 +68,7 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center'}}>
       <Text style={styles.headerText}>Register</Text>
       <View style={{padding:61}}>
         <Text style={styles.subText}>First Name</Text>

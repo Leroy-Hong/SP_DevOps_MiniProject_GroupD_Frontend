@@ -1,9 +1,12 @@
 import { View, Text, Button, TextInput, StyleSheet, ScrollView, Pressable } from 'react-native';
 import alert from '../../../services/alert'
 import { useEffect, useState } from "react";
-import { getBooks, getUsers } from "@/services/mongoApi";
+// import { getBooks, getUsers } from "@/services/mongoApi";
+import { mongoObject } from '@/services/mongoObject';
 import { useRoute } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
+import BookCard from '../../../components/BookCard';
 export default function Home() {
     // var data: { _id: string, category: string, id: string, library: string, name: string, status: {}}[] = []
     interface Book {
@@ -16,17 +19,18 @@ export default function Home() {
         dueDate: string;
     }
     
-
+    const { user } = useAuth();
     const [displayedData, setDisplayedData] = useState<Book[]>([]);
-    var userData: Record<string, string> = {"1":"Balls"};
+    const mongoDB = new mongoObject(String(process.env.EXPO_PUBLIC_API_KEY))
+    var userData: Record<string, string> = {"":""};
     var bookData: Book[] = [];
     useEffect(() => {
         async function getData() {
-            await getUsers({"studentId":"P2302223"}).then(tempData => {
+            await mongoDB.getUsers({"studentId":"P2302223"}).then(tempData => {
                 userData = tempData[0].borrowedBooks;
                 console.log(userData);
             })
-            await getBooks().then(tempData => {
+            await mongoDB.getBooks().then(tempData => {
                 bookData = tempData;
                 console.log(bookData);
             })
@@ -71,17 +75,11 @@ export default function Home() {
             }}
         >
             <Text>My Books</Text>
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView>
             {displayedData.map(item => (
-                <Pressable key={item._id} style={styles.itemContainer} onPress={() => router.navigate({pathname:'/home/bookDetails', params:{id:item.id}})}>
-                <Text style={styles.text}>Name: {item.name}</Text>
-                <Text style={styles.text}>Category: {item.category}</Text>
-                {/* <Text style={styles.text}>ID: {item.id}</Text> */}
-                <Text style={styles.text}>Library: {item.library}</Text>
-                <Text style={styles.text}>Due: {item.dueDate}</Text>
-                {/* <Text style={styles.text}>Status: {JSON.stringify(item.status)}</Text> */}
+                <Pressable key={item._id} onPress={() => router.navigate({pathname:'/home/BookDetails', params:{id: item.id}})}>
+                    <BookCard book={item}></BookCard>
                 </Pressable>
-                
             ))}
             </ScrollView>
         </View>

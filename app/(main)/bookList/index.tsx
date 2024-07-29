@@ -1,9 +1,9 @@
 import { Button, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { useCallback, useEffect, useState } from "react";
 import { mongoObject } from '@/services/mongoObject';
-import BookDetails from '../../components/BookCard';
+import BookCard from '../../../components/BookCard';
 
 export default function BookList() {
     const { logout, user } = useAuth();
@@ -58,8 +58,8 @@ export default function BookList() {
             width: '100%',
             }}>
                 {bookData.map((item,i) => (
-                    <Pressable key={item._id} onPress={() => router.navigate({pathname:'/home/BookDetails', params:{id:item.id}})}>
-                        <BookDetails book={item}></BookDetails>
+                    <Pressable key={item._id} onPress={() => router.push({pathname:'/home/BookDetails', params:{id:item.id}})}>
+                        <BookCard book={item}></BookCard>
                     </Pressable>
                 ))}
             </ScrollView>

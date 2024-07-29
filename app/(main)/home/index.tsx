@@ -77,7 +77,7 @@ export default function Home() {
             <Text>My Books</Text>
             <ScrollView>
             {displayedData.map(item => (
-                <Pressable key={item._id} onPress={() => router.navigate({pathname:'/home/BookDetails', params:{id: item.id}})}>
+                <Pressable key={item._id} onPress={() => router.push({pathname:'/home/BookDetails', params:{id: item.id}})}>
                     <BookCard book={item}></BookCard>
                 </Pressable>
             ))}

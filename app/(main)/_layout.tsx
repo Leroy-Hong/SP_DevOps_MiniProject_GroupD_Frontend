@@ -13,7 +13,7 @@ export default function MainLayout() {
         ),
         }}/>
 
-      <Tabs.Screen name="booklist" options={{
+      <Tabs.Screen name="bookList" options={{
         headerTitle:'All Books',
         tabBarLabel:'All Books',
         tabBarIcon: ({ color, size }) => (

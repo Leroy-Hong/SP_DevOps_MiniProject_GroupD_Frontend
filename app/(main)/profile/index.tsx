@@ -1,5 +1,5 @@
 import { Button, Pressable, Text, View } from "react-native";
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 
 export default function Profile() {

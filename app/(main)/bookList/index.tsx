@@ -1,4 +1,4 @@
-import { Button, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Button, Pressable, RefreshControl, ScrollView, Text, View, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from '../../../contexts/AuthContext';
 import { useCallback, useEffect, useState } from "react";
@@ -37,18 +37,28 @@ export default function BookList() {
         })
     }, [])
 
+    const styles = StyleSheet.create({
+        container: {
+            padding: 20,
+        },
+        itemContainer: {
+            marginBottom: 20,
+            padding: 10,
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 5,
+        },
+        text: {
+            fontSize: 16,
+        },
+    });
+
+
     return (
-        <View
-            style={{
-            position: "absolute",
-            flex: 1,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            }}
-        >
+        <>
             <Text>Book List</Text>
-            <ScrollView 
+            <ScrollView
+            // style={{height:200}} 
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
@@ -57,13 +67,13 @@ export default function BookList() {
             justifyContent: 'center',
             width: '100%',
             }}>
-                {bookData.map((item,i) => (
-                    <Pressable key={item._id} onPress={() => router.push({pathname:'/home/BookDetails', params:{id:item.id}})}>
+                {bookData.map(item => (
+                    <Pressable key={item.id} onPress={() => router.push({pathname:'/home/BookDetails', params:{id:item.id}})}>
                         <BookCard book={item}></BookCard>
                     </Pressable>
                 ))}
             </ScrollView>
-        </View>
+        </>
         );
 
 }

@@ -1,9 +1,6 @@
-import { View, Text, Button, TextInput, StyleSheet, ScrollView, Pressable } from 'react-native';
-import alert from '../../../services/alert'
-import { useEffect, useState } from "react";
-// import { getBooks, getUsers } from "@/services/mongoApi";
-import { mongoObject } from '@/services/mongoObject';
-import { useRoute } from '@react-navigation/native';
+import { View, Text, RefreshControl, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { useCallback, useEffect, useState } from "react";
+import { MongoObject2 } from '@/services/mongoObject2';
 import { router } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import BookCard from '../../../components/BookCard';
@@ -21,34 +18,41 @@ export default function Home() {
     
     const { user } = useAuth();
     const [displayedData, setDisplayedData] = useState<Book[]>([]);
-    const mongoDB = new mongoObject(String(process.env.EXPO_PUBLIC_API_KEY))
+    const bookDB = new MongoObject2("books")
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+    }, []);
+
     var userData: Record<string, string> = {"":""};
     var bookData: Book[] = [];
+
+
     useEffect(() => {
+        console.log("Home is being rendered")
         async function getData() {
-            await mongoDB.getUsers({"studentId":"P2302223"}).then(tempData => {
-                userData = tempData[0].borrowedBooks;
-                console.log(userData);
-            })
-            await mongoDB.getBooks().then(tempData => {
-                bookData = tempData;
-                console.log(bookData);
+            // From booksDB, identify the books that are reserved by user or owned
+            return await bookDB.getItems({
+                "$or": [
+                  { "status.reserved": user?.username },
+                  { "status.owner": user?.username }
+                ]
+              }
+              ).then(reservedBooks => {
+                console.log(reservedBooks)
+                return reservedBooks
             })
         };
         
-        getData().then(() => {
-            const filteredBooks = bookData.filter(book => userData[book.id]);
-            const filteredData = filteredBooks.map(book => ({
-                ...book,
-                dueDate: userData[book.id]
-              }));
-            
-              console.log(filteredData)
-            setDisplayedData(filteredData)
-            // console.log("IDK WHATSO", (userData[bookData[2].id]))
+        getData().then((books) => {
+            setDisplayedData(books)
         })
         
-    }, [])
+    }, [refreshing])
 
     const styles = StyleSheet.create({
         container: {
@@ -67,22 +71,21 @@ export default function Home() {
     });
 
     return (
-        <View
-            // style={{
-            // flex: 1,
-            // justifyContent: "center",
-            // alignItems: "center",
-            // }}
-        >
-            <Text>My Books</Text>
-            <ScrollView>
+        <>
+        <Text>Logged in as {user?.username}</Text>
+        {displayedData.length > 0 ? 
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
             {displayedData.map(item => (
-                <Pressable key={item._id} onPress={() => router.push({pathname:'/home/BookDetails', params:{id: item.id}})}>
+                <Pressable key={item._id} onPress={() => router.push({pathname:'/home/book_details', params:{id: item.id}})}>
                     <BookCard book={item}></BookCard>
                 </Pressable>
             ))}
-            </ScrollView>
-        </View>
+            </ScrollView> 
+        : <Text>You have no books</Text>}
+        
+        </>
         );
 
     

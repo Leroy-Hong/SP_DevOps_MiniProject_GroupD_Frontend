@@ -4,9 +4,9 @@ import BookInformation from '@/components/BookInformation';
 
 export default function book_details() {
     const params = useLocalSearchParams();
-    const { id = 0, other} = params
+    const { id = "0", other} = params
 
   return (
-    <BookInformation bookId={0}/>
+    <BookInformation bookId={id.toString()}/>
   )
 }

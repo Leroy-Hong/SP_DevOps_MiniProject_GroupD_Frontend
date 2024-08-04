@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { MongoObject2 } from '@/services/mongoObject2';
 import { useAuth } from '@/contexts/AuthContext';
+import alert from '@/services/alert';
 
 
 interface Prop {
@@ -9,7 +10,7 @@ interface Prop {
 }
 
 interface bookStatus {
-  unavailable: boolean;
+  owner: string;
   reserved: string;
 }
 
@@ -28,26 +29,57 @@ const bookDB = new MongoObject2("books")
 
 const BookInformation: React.FC<Prop> = ({ bookId }) => {
   const [bookData, setBookData] = useState<Book>()
+  const [rerender, setRerender] = useState(0)
   const { user } = useAuth()
+  async function cancelReservation() {
+    try {
+      await bookDB.unsetItem({"id":bookId}, "status.reserved")
+    } catch (error) {
+      return false
+    }
+    setRerender(rerender+1)
+    return true
+  }
 
   async function reserveBook() {
     // Set the selected book to be reserved & unavailable in booksdb
-    bookDB.setItem({"id":bookId}, {"status.reserved":"P2302223"})
-    bookDB.setItem({"id":bookId}, {"status.unavailable":true})
+    async function sendRequests() {
+      try {
+        await bookDB.setItem({"id":bookId}, {"status.reserved":user?.username})
+      } catch (error) {
+        return false
+      }
+      setRerender(rerender+1)
+      return true
+    }
+
+    sendRequests().then((status) => {
+      if (status) {
+        alert('Success!','Book has been reserved', [
+          {text: 'OK', onPress: () => console.log('Alert dismissed')}
+        ]);
+      } else {
+        alert('Error!','Something went wrong in reserving', [
+          {text: 'OK', onPress: () => console.log('Alert dismissed')}
+        ]);
+      }
+    })
   }
   
   useEffect(() => {
-    userDB.getItems({"studentId":"P2302223"}).then(userData => {
+    console.log("BookInfo is being rendered", {rerender})
+    userDB.getItems({"studentId":user?.username}).then(userData => {
       // Get dueDate based on the logged in person's bookId
-      const dueDate = userData[0]['borrowedBooks'][bookId]
+      
+      var dueDate = userData[0]['borrowedBooks'][bookId] ?? ""
 
       bookDB.getItems({"id":bookId}).then(tempBookData => {
         const book = tempBookData[0]
         book["dueDate"] = dueDate
         setBookData(book)
-      })
-    })
-  }, [])
+      }).catch(error => {console.log('catch block in booksDB function'); console.log(error)});
+    }).catch(error => {console.log('catch block in userDB function'); console.log(error)});
+  }, [rerender])
 
 
   return (
@@ -62,24 +94,36 @@ const BookInformation: React.FC<Prop> = ({ bookId }) => {
         <View style={styles.textDetails}>
           <Text>{bookData?.category}</Text>
           <Text>{bookData?.library}</Text>
-          <Text>Due {bookData?.dueDate}</Text>
+          {bookData?.dueDate ? <Text>Due {bookData?.dueDate}</Text> : <></>}
+          {(bookData?.status.reserved == user?.username) ? <Text>Reserved by you</Text> : <></>}
         </View>
       </View>
 
       <View style={{flexDirection:'column'}}>
-        {(bookData?.status.unavailable) ? 
-        <Pressable style={[styles.button1, styles.unavailableBtnColour]}>
-          <Text style={styles.button1txt}>Unavailable For Reservation</Text>
-        </Pressable>
+        {(bookData?.status.owner || (bookData?.status.reserved ?? user?.username) != user?.username) ? 
+          <Pressable style={[styles.button1, styles.unavailableBtnColour]}>
+            <Text style={styles.button1txt}>Unavailable For Reservation</Text>
+          </Pressable>
+        : (bookData?.status.reserved == user?.username) ?
+          <Pressable style={({ pressed }) => [{backgroundColor: pressed? 'maroon' : "red"},styles.button1]}
+          onPress={cancelReservation}>
+            <Text style={styles.button1txt}>Cancel Reservation?</Text>
+          </Pressable>
         :
-        <Pressable style={({ pressed }) => [{backgroundColor: pressed? '#243234' : "#153B50"},styles.button1]} onPress={reserveBook}>
+        <Pressable style={({ pressed }) => [{backgroundColor: pressed? '#243234' : "#153B50"},styles.button1]}
+        onPress={reserveBook}>
           <Text style={styles.button1txt}>Reserve Book</Text>
-        </Pressable>}
-
-
-        <Pressable style={({ pressed }) => [{backgroundColor: pressed? '#243234' : "#153B50"},styles.button1]}>
-          <Text style={styles.button1txt}>Extend Loan</Text>
         </Pressable>
+        }
+
+        {(bookData?.status.owner == user?.username) ? 
+          <Pressable style={({ pressed }) => [{backgroundColor: pressed? '#243234' : "#153B50"},styles.button1]}>
+            <Text style={styles.button1txt}>Extend Loan</Text>
+          </Pressable>
+        :
+          <></>
+        }
+        
       </View>
 
 

@@ -1,9 +1,10 @@
 interface Book {
     _id: string;
-    category: string;
     id: string;
-    library: string;
     name: string;
+    library: string;
+    desc: string;
+    author: string;
     status: bookStatus;
     dueDate: string;
 }

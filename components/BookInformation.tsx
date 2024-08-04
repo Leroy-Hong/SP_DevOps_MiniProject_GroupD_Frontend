@@ -11,7 +11,7 @@ interface Prop {
 }
 
 const userDB = new MongoObject2("users")
-const bookDB = new MongoObject2("books")
+const bookDB = new MongoObject2("books2")
 
 const BookInformation: React.FC<Prop> = ({ bookId }) => {
   const [bookData, setBookData] = useState<Book>()

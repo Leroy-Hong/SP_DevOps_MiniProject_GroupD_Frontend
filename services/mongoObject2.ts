@@ -85,5 +85,5 @@ export class MongoObject2 {
 }
 
 // Usage example
-const db = new MongoObject2('books');
+const db = new MongoObject2('books2');
 db.listItems();

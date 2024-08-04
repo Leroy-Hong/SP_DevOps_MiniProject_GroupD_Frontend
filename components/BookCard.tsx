@@ -20,7 +20,7 @@ const BookCard: React.FC<BookItemProps> = ({ book }) => {
       <View style={styles.textDetails}>
 
         <Text style={styles.title}>{book.name}</Text>
-        <Text>Category: {book.category}</Text>
+        <Text>By: {book.author}</Text>
         {book.dueDate ?
           <Text>Due: {book.dueDate}</Text> :
           <View />

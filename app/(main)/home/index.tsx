@@ -10,7 +10,7 @@ export default function Home() {
     
     const { user } = useAuth();
     const [displayedData, setDisplayedData] = useState<Book[]>([]);
-    const bookDB = new MongoObject2("books")
+    const bookDB = new MongoObject2("books2")
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {

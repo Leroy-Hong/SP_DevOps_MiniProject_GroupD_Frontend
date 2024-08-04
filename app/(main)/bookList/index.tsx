@@ -2,7 +2,7 @@ import { Button, Pressable, RefreshControl, ScrollView, Text, View, StyleSheet }
 import { router } from "expo-router";
 import { useAuth } from '../../../contexts/AuthContext';
 import { useCallback, useEffect, useState } from "react";
-import { mongoObject } from '@/services/mongoObject';
+import { MongoObject2 } from '@/services/mongoObject2';
 import BookCard from '../../../components/BookCard';
 import { Book } from '@/services/interfaces'
 
@@ -17,7 +17,8 @@ export default function BookList() {
         }, 2000);
     }, []);
 
-    const mongoDB = new mongoObject(String(process.env.EXPO_PUBLIC_API_KEY))
+    const bookDB = new MongoObject2("books2")
+    const userDB = new MongoObject2("users")
 
     
     const [bookData, setBookData] = useState<Book[]>([]);
@@ -25,7 +26,7 @@ export default function BookList() {
 
     useEffect(() => {
         console.log("BookList is being rendered")
-        mongoDB.getBooks().then(tempData => {
+        bookDB.getItems({}).then(tempData => {
             setBookData(tempData)
             console.log(bookData)
         })

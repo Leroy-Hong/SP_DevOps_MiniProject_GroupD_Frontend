@@ -1,13 +1,12 @@
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text } from 'react-native'
+import BookInformation from '@/components/BookInformation';
 
-export default function BookDetails() {
+export default function book_details() {
     const params = useLocalSearchParams();
     const { id = 0, other} = params
 
   return (
-    <View>
-      <Text>{id}</Text>
-    </View>
+    <BookInformation bookId={0}/>
   )
 }

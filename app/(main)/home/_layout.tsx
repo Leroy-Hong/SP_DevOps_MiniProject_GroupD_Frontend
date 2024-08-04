@@ -5,7 +5,7 @@ export default function HomeLayout() {
   return (
     <Stack>
       <Stack.Screen name='index' options={{headerShown: false, headerTitle: "My Books"}}/>
-      <Stack.Screen name='BookDetails' options={{headerTitle:"Book Details"}}/>
+      <Stack.Screen name='book_details' options={{headerTitle:"Book Details"}}/>
     </Stack>
   );
 }

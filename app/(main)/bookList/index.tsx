@@ -12,9 +12,9 @@ export default function BookList() {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
-          setRefreshing(false);
+            setRefreshing(false);
         }, 2000);
-      }, []);
+    }, []);
 
     const mongoDB = new mongoObject(String(process.env.EXPO_PUBLIC_API_KEY))
 
@@ -31,11 +31,12 @@ export default function BookList() {
 
 
     useEffect(() => {
+        console.log("BookList is being rendered")
         mongoDB.getBooks().then(tempData => {
             setBookData(tempData)
             console.log(bookData)
         })
-    }, [])
+    }, [refreshing])
 
     const styles = StyleSheet.create({
         container: {
@@ -56,24 +57,22 @@ export default function BookList() {
 
     return (
         <>
-            <Text>Book List</Text>
-            <ScrollView
-            // style={{height:200}} 
+        <ScrollView
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            width: '100%',
+                flexGrow: 1,
+                justifyContent: 'center',
+                width: '100%',
             }}>
-                {bookData.map(item => (
-                    <Pressable key={item.id} onPress={() => router.push({pathname:'/home/BookDetails', params:{id:item.id}})}>
-                        <BookCard book={item}></BookCard>
-                    </Pressable>
-                ))}
-            </ScrollView>
+            {bookData.map(item => (
+                <Pressable key={item.id} onPress={() => router.push({ pathname: '/bookList/book_details', params: { id: item.id } })}>
+                    <BookCard book={item}></BookCard>
+                </Pressable>
+            ))}
+        </ScrollView>
         </>
-        );
+    );
 
 }

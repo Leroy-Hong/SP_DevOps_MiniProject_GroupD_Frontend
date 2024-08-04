@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
 interface BookItemProps {
-   book : {
+  book: {
     _id: string;
     category: string;
     id: string;
@@ -13,26 +13,26 @@ interface BookItemProps {
   }
 }
 
-const BookDetails: React.FC<BookItemProps> = ({ book }) => {
+const BookCard: React.FC<BookItemProps> = ({ book }) => {
 
   useEffect(() => {
-    console.log(book.name)
-    console.log(book.name.length)
+    // console.log(book.name)
+    // console.log(book.name.length)
   }, [])
 
 
   return (
     <View style={styles.container}>
-      <Image source={require('@/assets/images/Placeholder_Image.png')}/>
+      <Image source={require('@/assets/images/Placeholder_Image.png')} />
       <View style={styles.textDetails}>
 
         <Text style={styles.title}>{book.name}</Text>
         <Text>Category: {book.category}</Text>
-        {book.dueDate?
-         <Text>Due: {book.dueDate}</Text>:
-         <View/>
+        {book.dueDate ?
+          <Text>Due: {book.dueDate}</Text> :
+          <View />
         }
-        
+
       </View>
 
     </View>
@@ -41,7 +41,7 @@ const BookDetails: React.FC<BookItemProps> = ({ book }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexShrink:1,
+    flexShrink: 1,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 8,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   title: {
-    flex:1,
+    flex: 1,
     flexShrink: 1,
     fontSize: 18,
     fontWeight: 'bold',
@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   textDetails: {
-    flex:1,
-    paddingHorizontal:10,
-    flexDirection:"column"
+    flex: 1,
+    paddingHorizontal: 10,
+    flexDirection: "column"
   },
 });
 
-export default BookDetails;
+export default BookCard;

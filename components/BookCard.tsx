@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Book } from '@/services/interfaces'
+import { BOOK_COVERS } from '@/services/bookcovers';
 
 interface BookItemProps {
   book: Book
 }
+
+var imageSrc = ""
 
 const BookCard: React.FC<BookItemProps> = ({ book }) => {
 
@@ -16,7 +19,7 @@ const BookCard: React.FC<BookItemProps> = ({ book }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('@/assets/images/Placeholder_Image.png')} />
+      <Image style={styles.bookImage}source={BOOK_COVERS[+book.id]} />
       <View style={styles.textDetails}>
 
         <Text style={styles.title}>{book.name}</Text>
@@ -64,6 +67,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: "column"
   },
+  bookImage: {
+    width: 181,
+    height: 252,
+    resizeMode: 'contain'
+  }
 });
 
 export default BookCard;

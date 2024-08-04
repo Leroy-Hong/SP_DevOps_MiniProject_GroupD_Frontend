@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { useCallback, useEffect, useState } from "react";
 import { mongoObject } from '@/services/mongoObject';
 import BookCard from '../../../components/BookCard';
+import { Book } from '@/services/interfaces'
 
 export default function BookList() {
     const { logout, user } = useAuth();
@@ -18,15 +19,7 @@ export default function BookList() {
 
     const mongoDB = new mongoObject(String(process.env.EXPO_PUBLIC_API_KEY))
 
-    interface Book {
-        _id: string;
-        category: string;
-        id: string;
-        library: string;
-        name: string;
-        status: {};
-        dueDate: string;
-    }
+    
     const [bookData, setBookData] = useState<Book[]>([]);
 
 

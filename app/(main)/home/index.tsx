@@ -4,17 +4,9 @@ import { MongoObject2 } from '@/services/mongoObject2';
 import { router } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import BookCard from '../../../components/BookCard';
+import { Book } from '@/services/interfaces'
 export default function Home() {
     // var data: { _id: string, category: string, id: string, library: string, name: string, status: {}}[] = []
-    interface Book {
-        _id: string;
-        category: string;
-        id: string;
-        library: string;
-        name: string;
-        status: {};
-        dueDate: string;
-    }
     
     const { user } = useAuth();
     const [displayedData, setDisplayedData] = useState<Book[]>([]);

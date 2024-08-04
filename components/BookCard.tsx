@@ -1,16 +1,9 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { Book } from '@/services/interfaces'
 
 interface BookItemProps {
-  book: {
-    _id: string;
-    category: string;
-    id: string;
-    library: string;
-    name: string;
-    status: {};
-    dueDate: string;
-  }
+  book: Book
 }
 
 const BookCard: React.FC<BookItemProps> = ({ book }) => {

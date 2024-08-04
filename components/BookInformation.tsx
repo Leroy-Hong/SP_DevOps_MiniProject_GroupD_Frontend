@@ -3,25 +3,11 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { MongoObject2 } from '@/services/mongoObject2';
 import { useAuth } from '@/contexts/AuthContext';
 import alert from '@/services/alert';
+import { Book } from '@/services/interfaces';
 
 
 interface Prop {
   bookId: string;
-}
-
-interface bookStatus {
-  owner: string;
-  reserved: string;
-}
-
-interface Book {
-  _id: string;
-  category: string;
-  id: string;
-  library: string;
-  name: string;
-  status: bookStatus;
-  dueDate: string;
 }
 
 const userDB = new MongoObject2("users")

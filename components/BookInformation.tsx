@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView } from 'react-native';
 import { MongoObject2 } from '@/services/mongoObject2';
 import { useAuth } from '@/contexts/AuthContext';
 import alert from '@/services/alert';
 import { Book } from '@/services/interfaces';
+import { BOOK_COVERS } from '@/services/bookcovers';
 
 
 interface Prop {
@@ -70,22 +71,27 @@ const BookInformation: React.FC<Prop> = ({ bookId }) => {
 
   return (
     <View style={styles.main}>
-      <Text style={styles.title}
+      <Text 
       adjustsFontSizeToFit={true}
-      numberOfLines={1}>
+      numberOfLines={2}
+      style={styles.title}>
         {bookData?.name}
       </Text>
+      
       <View style={styles.details}>
-        <Image source={require('@/assets/images/Placeholder_Image.png')} />
-        <View style={styles.textDetails}>
-          <Text>{bookData?.category}</Text>
+        <Image style={styles.bookImage} source={BOOK_COVERS[+bookId]} />
+        <View style={styles.txtDetailsView}>
+          <Text style={styles.author}>{bookData?.author}</Text>
           <Text>{bookData?.library}</Text>
           {bookData?.dueDate ? <Text>Due {bookData?.dueDate}</Text> : <></>}
           {(bookData?.status.reserved == user?.username) ? <Text>Reserved by you</Text> : <></>}
+          <ScrollView style={{marginTop:10}}bounces={false} persistentScrollbar={true}>
+            <Text style={styles.bookDesc}>{bookData?.desc}</Text>
+          </ScrollView>
         </View>
       </View>
 
-      <View style={{flexDirection:'column'}}>
+      <View style={{flexGrow:1,flexDirection:'column'}}>
         {(bookData?.status.owner || (bookData?.status.reserved ?? user?.username) != user?.username) ? 
           <Pressable style={[styles.button1, styles.unavailableBtnColour]}>
             <Text style={styles.button1txt}>Unavailable For Reservation</Text>
@@ -125,8 +131,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   title: {
+    // height: "10%",
     marginBottom: 10,
-    flexShrink: 1,
     fontSize: 999,
     fontWeight: 'bold',
     flexWrap: 'wrap'
@@ -138,10 +144,13 @@ const styles = StyleSheet.create({
   },
   details: {
     flexShrink: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    alignSelf: 'baseline'
   },
-  textDetails: {
-
+  txtDetailsView: {
+    flexShrink: 1,
+    paddingLeft: 10,
+    height: "70%"
   },
   button1: {
     alignItems: 'center',
@@ -164,6 +173,15 @@ const styles = StyleSheet.create({
   },
   unavailableBtnColour: {
     backgroundColor: 'gray'
+  },
+  bookImage: {
+    width: 181,
+    height: 252,
+    resizeMode: 'contain'
+  },
+  bookDesc: {
+    flexShrink: 1,
+    flexWrap: 'wrap'
   }
 });
 

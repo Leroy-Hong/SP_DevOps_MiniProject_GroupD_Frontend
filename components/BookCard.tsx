@@ -7,8 +7,6 @@ interface BookItemProps {
   book: Book
 }
 
-var imageSrc = ""
-
 const BookCard: React.FC<BookItemProps> = ({ book }) => {
 
   useEffect(() => {

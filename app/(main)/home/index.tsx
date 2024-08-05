@@ -65,18 +65,15 @@ export default function Home() {
     return (
         <>
         <Text>Logged in as {user?.username}</Text>
-        {displayedData.length > 0 ? 
             <ScrollView refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }>
-            {displayedData.map(item => (
+            {displayedData.length > 0 ? displayedData.map(item => (
                 <Pressable key={item._id} onPress={() => router.push({pathname:'/home/book_details', params:{id: item.id}})}>
                     <BookCard book={item}></BookCard>
                 </Pressable>
-            ))}
+            )) : <Text>You have no books</Text>}
             </ScrollView> 
-        : <Text>You have no books</Text>}
-        
         </>
         );
 

@@ -12,6 +12,7 @@ interface Book {
 interface bookStatus {
     owner: string;
     reserved: string;
+    loanExtended: string;
   }
 
 export {

@@ -1,4 +1,5 @@
 # A frontend developed for a school project
+![Icon](https://cdn.discordapp.com/attachments/852872786334187521/1269819128554848348/App_Icon.png?ex=66b172b8&is=66b02138&hm=36f44cfd5345605a67630aac0cfe0448dd44a40c83f95f30513728cd16eec710&)
 DCPE/FT/2A/01
 DevOps AY24/25
 

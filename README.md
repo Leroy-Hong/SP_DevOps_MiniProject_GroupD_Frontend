@@ -1,6 +1,18 @@
-# Welcome to your Expo app 👋
+# A frontend developed for a school project
+DCPE/FT/2A/01
+DevOps AY24/25
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Purpose
+This frontend allows the reservation of books, cancelling of reservation, and viewing of books in the database.
+The frontend also includes an authentication page that allows you to login or signup and create an account.
+
+This is an [Expo](https://expo.dev) project that uses the react-native framework.
+It is **CRUCIAL** to note that the frontend developed here is **NOT** production ready.
+I understand and am aware of the security flaws the project presents
+1. The env API key when placed into the file directory can be exposed easily
+2. The encryption method used to store password and username is PUBLICALLY shown in the react project.
+3. There is no backend in the project to handle username and password properly. MongoDB is used to store the data
+4. 
 
 ## Get started
 
@@ -24,25 +36,6 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
 
 Join our community of developers creating universal apps.
 

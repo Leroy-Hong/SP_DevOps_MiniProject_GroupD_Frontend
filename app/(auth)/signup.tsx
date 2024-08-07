@@ -41,8 +41,7 @@ const SignUp: React.FC = () => {
             "studentId": username,
             "password": encryptPW,
             "name": name,
-            "loan": 0,
-            "borrowedBooks": []
+            "borrowedBooks": {}
             })
         }
       });

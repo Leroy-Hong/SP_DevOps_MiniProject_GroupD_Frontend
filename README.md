@@ -1,5 +1,5 @@
 # A frontend developed for a school project
-![Icon](https://cdn.discordapp.com/attachments/852872786334187521/1269819128554848348/App_Icon.png?ex=66b172b8&is=66b02138&hm=36f44cfd5345605a67630aac0cfe0448dd44a40c83f95f30513728cd16eec710&)
+![Icon](assets/images/App%20Icon.png)
 
 DCPE/FT/2A/01
 DevOps AY24/25
@@ -31,7 +31,7 @@ I understand and am aware of the security flaws the project presents:
 2. Start the app
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
 In the output, you'll find options to open the app in a

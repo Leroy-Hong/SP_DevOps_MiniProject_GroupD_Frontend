@@ -18,9 +18,12 @@ const BookInformation: React.FC<Prop> = ({ bookId }) => {
   const [bookData, setBookData] = useState<Book>()
   const [rerender, setRerender] = useState(0)
   const { user } = useAuth()
+
+
   async function cancelReservation() {
     try {
       await bookDB.unsetItem({"id":bookId}, "status.reserved")
+      await userDB.unsetItem({"studentId":user?.username}, `reservedBooks.${bookId}`)
     } catch (error) {
       return false
     }
@@ -70,11 +73,21 @@ const BookInformation: React.FC<Prop> = ({ bookId }) => {
     }
   }
 
+
   async function reserveBook() {
-    // Set the selected book to be reserved & unavailable in booksdb
+    // Set the selected book to be reserved
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yy = (today.getFullYear() % 100);
+    var todayString = dd + '/' + mm + '/' + yy;
+
+    var dueDate = addDaysToDate(todayString, 5)
+    
     async function sendRequests() {
       try {
         await bookDB.setItem({"id":bookId}, {"status.reserved":user?.username})
+        await userDB.setItem({"studentId":user?.username}, {[`reservedBooks.${bookId}`]:dueDate})
       } catch (error) {
         return false
       }

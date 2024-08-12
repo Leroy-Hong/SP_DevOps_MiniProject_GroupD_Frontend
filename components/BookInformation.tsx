@@ -83,29 +83,44 @@ const BookInformation: React.FC<Prop> = ({ bookId }) => {
     var todayString = dd + '/' + mm + '/' + yy;
 
     var dueDate = addDaysToDate(todayString, 5)
-    
-    async function sendRequests() {
-      try {
-        await bookDB.setItem({"id":bookId}, {"status.reserved":user?.username})
-        await userDB.setItem({"studentId":user?.username}, {[`reservedBooks.${bookId}`]:dueDate})
-      } catch (error) {
-        return false
-      }
-      setRerender(rerender+1)
-      return true
-    }
-
-    sendRequests().then((status) => {
-      if (status) {
-        alert('Success!','Book has been reserved', [
-          {text: 'OK', onPress: () => console.log('Alert dismissed')}
-        ]);
-      } else {
-        alert('Error!','Something went wrong in reserving', [
-          {text: 'OK', onPress: () => console.log('Alert dismissed')}
-        ]);
-      }
+    var numberOfBooks = await bookDB.getItems({
+          "$or": [
+            { "status.reserved": user?.username },
+            { "status.owner": user?.username }
+          ]
+        }
+        ).then(reservedBooks => {
+          console.log(reservedBooks.length)
+          return reservedBooks.length
     })
+    if (numberOfBooks >= 10) {
+      alert('Error!','You already have 10 books', [
+        {text: 'OK', onPress: () => console.log('Alert dismissed')}
+      ]);
+    } else {
+      async function sendRequests() {
+        try {
+          await bookDB.setItem({"id":bookId}, {"status.reserved":user?.username})
+          await userDB.setItem({"studentId":user?.username}, {[`reservedBooks.${bookId}`]:dueDate})
+        } catch (error) {
+          return false
+        }
+        setRerender(rerender+1)
+        return true
+      }
+  
+      sendRequests().then((status) => {
+        if (status) {
+          alert('Success!','Book has been reserved', [
+            {text: 'OK', onPress: () => console.log('Alert dismissed')}
+          ]);
+        } else {
+          alert('Error!','Something went wrong in reserving', [
+            {text: 'OK', onPress: () => console.log('Alert dismissed')}
+          ]);
+        }
+      })
+    }    
   }
   
   useEffect(() => {

@@ -1,6 +1,6 @@
 # A frontend developed for a school project
 ![Icon](assets/images/App%20Icon.png)
-
+### Hi juniors, if u gna steal my work please at least star the repo k thx
 DCPE/FT/2A/01
 DevOps AY24/25
 
